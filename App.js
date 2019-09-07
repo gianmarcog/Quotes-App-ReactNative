@@ -29,6 +29,9 @@ export default class App extends Component {
     if(nextIndex === data.length) nextIndex = 0;
     return (
       <View style={styles.container}>
+        <View style={styles.newButton}>
+        <Button title="neues Zitat"onPress={()=> alert('Neues Zitat')} />
+        </View>
         <Quote text={quote.text} author={quote.author} book={quote.book}></Quote>
         <View style={styles.button}>
         <Button title ="next Quote"
@@ -41,14 +44,18 @@ export default class App extends Component {
 }
 
 const styles = StyleSheet.create({
-      container: {
-            flex: 1,
-            backgroundColor: '#fff',
-            alignItems: 'center',
-            justifyContent: 'center',
+  container: {
+       flex: 1,
+       backgroundColor: '#fff',
+       alignItems: 'center',
+       justifyContent: 'center',
         },
     button: {
       position: "absolute",
       bottom: 20
+    }
+    newButton: {
+      position: 'absolute',
+      top: 30 
     }
 });

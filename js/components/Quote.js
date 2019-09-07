@@ -1,31 +1,35 @@
-import React, { Component, Fragment } from 'react';
-import { Text } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default class Quote extends Component {
     render() {
         const {text, author, book } = this.props; //destructuring
         return (
-            <Fragment>
+            <View style={styles.container}>
                 <Text style={styles.text}>{text}</Text>
                 <Text style={styles.author}>&mdash; {author}</Text>
                 <Text style={styles.book}>&mdash; {book}</Text>
-            </Fragment>
+            </View>
         );
     }
 }
 
-const styles = {
+const styles = StyleSheet.create({
+    container: {
+        paddingHorizontal: 10
+    },
     text: {
-        fontSize: 36,
-        fontStyle: 'italic'
+        fontSize: 30,
+        fontStyle: 'italic',
+        marginBottom: 10
     },
     author: {
-        fontSize: 20,
-        //textAlign: 'left'
+        fontSize: 15,
+        textAlign: 'right'
     },
     book: {
-        fontSize: 20,
-        //textAlign: 'left'
+        fontSize: 15,
+        textAlign: 'right'
     }
 
-}
+});

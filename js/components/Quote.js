@@ -8,7 +8,7 @@ export default class Quote extends Component {
             <View style={styles.container}>
                 <Text style={styles.text}>{text}</Text>
                 <Text style={styles.author}>&mdash; {author}</Text>
-                <Text style={styles.book}>&mdash; {book}</Text>
+                <Text style={styles.book}>{book}</Text>
             </View>
         );
     }

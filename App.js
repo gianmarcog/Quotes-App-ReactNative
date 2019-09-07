@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
 import Quote from './js/components/Quote';
+import NewQuote from './js/components/NewQuote';
 
 const data = [
     {
@@ -21,7 +22,12 @@ const data = [
 ];
 
 export default class App extends Component {
-  state = { index: 0 };
+  state = { index: 0, showNewQuoteScreen: false };
+
+  _addQuote = () => {
+    this.setState({ showNewQuoteScreen: false });
+  }
+
   render(){
     let index = this.state.index;
     const quote = data[index];
@@ -30,8 +36,14 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.newButton}>
-        <Button title="neues Zitat"onPress={()=> alert('Neues Zitat')} />
+        <Button 
+        title="Neu"
+        onPress={()=> this.setState({showNewQuoteScreen: true })} />
         </View>
+        <NewQuote 
+        visible={this.state.showNewQuoteScreen}
+        onSave={this._addQuote}
+        />
         <Quote text={quote.text} author={quote.author} book={quote.book}></Quote>
         <View style={styles.button}>
         <Button title ="next Quote"
@@ -48,14 +60,15 @@ const styles = StyleSheet.create({
        flex: 1,
        backgroundColor: '#fff',
        alignItems: 'center',
-       justifyContent: 'center',
+       justifyContent: 'center'
         },
     button: {
       position: "absolute",
       bottom: 20
-    }
+    },
     newButton: {
       position: 'absolute',
-      top: 30 
+      top: 30 ,
+      right: 3
     }
 });

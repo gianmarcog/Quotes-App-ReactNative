@@ -3,6 +3,16 @@ import {Button, StyleSheet, Text, View, AsyncStorage} from 'react-native';
 import Quote from './js/components/Quote';
 import NewQuote from './js/components/NewQuote';
 
+function StyledButton(props) {
+  return(
+<View style={props.style}>
+        <Button 
+        title ={props.title}
+          onPress={props.onPress}
+        />
+        </View>
+  )};
+
 const data = [
     {
         text: 'Happiness can be found, even in the darkest of times, if one only remembers to turn on the light.',
@@ -29,8 +39,7 @@ _retrieveData = async () => {
     if(value != null){
     value = JSON.parse(value);
     this.setState({quotes: value});
-    }
-  });
+  }
 }
 
 _storageData(quotes){
@@ -47,28 +56,37 @@ _storageData(quotes){
     this.setState({ showNewQuoteScreen: false, quotes: quotes });
   }
 
-  render(){
-    let index = this.state.index
-    const quote = data[index];
+  _displayNextQuote(){
+    let { index, quotes } = this.state.index
     let nextIndex =index + 1;
     if(nextIndex === data.length) nextIndex = 0;
+    this.setState({index: nextIndex})
+  }
+
+  componentDidMount(){
+    this._retrieveData();
+  }
+
+  render(){
+    let { index, quotes } = this.state.index
+    const quote = data[index];
     return (
       <View style={styles.container}>
-        <View style={styles.newButton}>
-        <Button 
+        <StyledButton 
+        style={styles.newButton}
         title="Neu"
-        onPress={()=> this.setState({showNewQuoteScreen: true })} />
-        </View>
+        onPress={()=> this.setState({showNewQuoteScreen: true })} 
+        />
         <NewQuote 
         visible={this.state.showNewQuoteScreen}
         onSave={this._addQuote}
         />
         <Quote text={quote.text} author={quote.author} book={quote.book}></Quote>
-        <View style={styles.button}>
-        <Button title ="next Quote"
-          onPress={() => this.setState({index: nextIndex})}
+        <StyledButton 
+        style={styles.nextButton}
+        title="next Quote"
+        onPress={()=> this._displayNextQuote()} 
         />
-        </View>
       </View>
     )
   }

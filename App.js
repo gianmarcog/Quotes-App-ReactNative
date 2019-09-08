@@ -24,8 +24,8 @@ const data = [
 export default class App extends Component {
   state = { index: 0, showNewQuoteScreen: false, quotes: data };
 
-_retrieveData() {
-  AsyncStorage.setItem('QUOTES').then(value => {
+_retrieveData = async () => {
+  let value = await AsyncStorage.getItem('QUOTES');
     if(value != null){
     value = JSON.parse(value);
     this.setState({quotes: value});

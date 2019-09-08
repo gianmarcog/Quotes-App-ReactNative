@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, StyleSheet, Text, View} from 'react-native';
+import {Button, StyleSheet, Text, View, AsyncStorage} from 'react-native';
 import Quote from './js/components/Quote';
 import NewQuote from './js/components/NewQuote';
 
@@ -24,11 +24,25 @@ const data = [
 export default class App extends Component {
   state = { index: 0, showNewQuoteScreen: false, quotes: data };
 
+_retrieveData() {
+  AsyncStorage.setItem('QUOTES').then(value => {
+    if(value != null){
+    value = JSON.parse(value);
+    this.setState({quotes: value});
+    }
+  });
+}
+
+_storageData(quotes){
+  AsyncStorage.setItem('QUOTES', JSON.stringify(quotes)); // key - value
+}
+
   _addQuote = (text, author, book) => {
    
     let { quotes } = this.state;
     if (text && author && book) {
     quotes.push({text: text, author: author, book: book});
+    this._storageDat(quotes);
     }
     this.setState({ showNewQuoteScreen: false, quotes: quotes });
   }

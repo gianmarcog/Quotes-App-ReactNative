@@ -10,7 +10,10 @@ export default class NewQuote extends Component {
         return(
             <Modal
             visible={visible} 
-            onRequestClose={onSave}
+            onRequestClose={() => {
+                this.setState({ content: null, author: null, book: null})
+                onSave(null, null, nll)
+            }}
             animationType='slide'
             >
             <View style={styles.container}>
@@ -33,7 +36,11 @@ export default class NewQuote extends Component {
                 //underlineColorAndroid="transparent" - only by Android
                 onChangeText={text => this.setState({ book: text })}
                 />
-             <Button title="Speichern" onPress={() => onSave(content, author, book)}/>
+             <Button title="Speichern" 
+             onPress={() => {
+                 this.setState({ content: null, author: null, book: null})
+                onSave(content, author, book)}}
+                />
              </View>
             </Modal> 
         );

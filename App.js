@@ -51,19 +51,26 @@ _storageData(quotes){
     let { quotes } = this.state;
     if (text && author && book) {
     quotes.push({text: text, author: author, book: book});
-    this._storageDat(quotes);
+    this._storageData(quotes);
     }
     this.setState({ 
-      index: index.length-1, 
+      index: quotes.length-1, 
       showNewQuoteScreen: false, 
       quotes: quotes });
   }
 
   _displayNextQuote(){
-    let { index, quotes } = this.state.index
+    let { index, quotes } = this.state;
     let nextIndex =index + 1;
-    if(nextIndex === data.length) nextIndex = 0;
+    if(nextIndex === quotes.length) nextIndex = 0;
     this.setState({index: nextIndex})
+  }
+
+  _deleteButton(){
+    let { index, quotes } = this.state;
+    quotes.splice(index, 1); //delete the part of the array
+    this._storageData(quotes);
+    this.setState({index: 0, quotes})
   }
 
   componentDidMount(){
@@ -71,10 +78,15 @@ _storageData(quotes){
   }
 
   render(){
-    let { index, quotes } = this.state.index
-    const quote = data[index];
+    let { index, quotes } = this.state
+    const quote = quotes[index];
     return (
       <View style={styles.container}>
+        <StyledButton 
+        style={styles.deleteButton}
+        title="Löschen"
+        onPress={()=> this._deleteButton()} 
+        />
         <StyledButton 
         style={styles.newButton}
         title="Neu"
@@ -101,7 +113,7 @@ const styles = StyleSheet.create({
        backgroundColor: '#fff',
        alignItems: 'center',
        justifyContent: 'center'
-        },
+    },
     button: {
       position: "absolute",
       bottom: 20
@@ -110,5 +122,14 @@ const styles = StyleSheet.create({
       position: 'absolute',
       top: 30 ,
       right: 3
+    },
+    nextButton: {
+      position: 'absolute',
+      bottom: 0
+    },
+    deleteButton: {
+      position: 'absolute',
+      left: 0,
+      top: 30
     }
 });

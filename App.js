@@ -22,14 +22,19 @@ const data = [
 ];
 
 export default class App extends Component {
-  state = { index: 0, showNewQuoteScreen: false };
+  state = { index: 0, showNewQuoteScreen: false, quotes: data };
 
-  _addQuote = () => {
-    this.setState({ showNewQuoteScreen: false });
+  _addQuote = (text, author, book) => {
+   
+    let { quotes } = this.state;
+    if (text && author && book) {
+    quotes.push({text: text, author: author, book: book});
+    }
+    this.setState({ showNewQuoteScreen: false, quotes: quotes });
   }
 
   render(){
-    let index = this.state.index;
+    let index = this.state.index
     const quote = data[index];
     let nextIndex =index + 1;
     if(nextIndex === data.length) nextIndex = 0;

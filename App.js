@@ -53,7 +53,10 @@ _storageData(quotes){
     quotes.push({text: text, author: author, book: book});
     this._storageDat(quotes);
     }
-    this.setState({ showNewQuoteScreen: false, quotes: quotes });
+    this.setState({ 
+      index: index.length-1, 
+      showNewQuoteScreen: false, 
+      quotes: quotes });
   }
 
   _displayNextQuote(){

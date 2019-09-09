@@ -16,6 +16,7 @@ function StyledButton(props) {
   )};
 
   //Array where are the defaults values
+  //Possible to delete this dafaults values let content do have a default value
 const data = [
     {
         text: 'Happiness can be found, even in the darkest of times, if one only remembers to turn on the light.',
@@ -100,17 +101,21 @@ _storageData(quotes){
   render(){
     let { index, quotes } = this.state //With this kind of coding you dont have to add to any index und quotes 'this.state' - destructuring
     const quote = quotes[index]; //This const load the actual index from the Array to show up
+    let content = <Text style={{fontSize: 30}}>No Quote</Text> //Create deafult value if their is no data inside the array
+    if(quote) { //Check the  quote array
+      content = <Quote text={quote.text} author={quote.author} book={quote.book} />;
+    }
     return (
       <View style={styles.container}>
         <StyledButton 
         //Here you have to add the paramters of the method wie create above
         style={styles.deleteButton}
-        title="Löschen"
+        title="Delete"
         onPress={()=> this._deleteButton()} 
         />
         <StyledButton 
         style={styles.newButton}
-        title="Neu"
+        title="New"
         onPress={()=> this.setState({showNewQuoteScreen: true })} 
         />
         {/* With the NewQuote Tag you can communicate with the 'NewQuote.js' file */}
@@ -118,9 +123,8 @@ _storageData(quotes){
         visible={this.state.showNewQuoteScreen}
         onSave={this._addQuote}
         />
-        {/* With the Quote Tag you can communicate with the 'Quote.js' file */}
-        <Quote text={quote.text} author={quote.author} book={quote.book}></Quote>
         {/* With the StyleButton Tag you do have a constructer with which one you work */}
+        {content}
         <StyledButton 
         style={styles.nextButton}
         title="next Quote"

@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
-import {Button, StyleSheet, Text, View, AsyncStorage} from 'react-native';
+import {Button, 
+  StyleSheet, 
+  Text, 
+  View, 
+  AsyncStorage, 
+  Alert} 
+  from 'react-native';
 import Quote from './js/components/Quote';
 import NewQuote from './js/components/NewQuote';
 
@@ -7,7 +13,7 @@ import NewQuote from './js/components/NewQuote';
 function StyledButton(props) {
   let button = null;
   if(props.visible) //If the button visible boolean is true you can see it.
-  button( 
+  button = ( 
        //props.style is kind of a placeholder as a definition for the future StyledButtons
 <View style={props.style}>
         <Button //The Button is gonnna get is properties
@@ -15,8 +21,8 @@ function StyledButton(props) {
           onPress={props.onPress}
         />
         </View>
-  );
-  else return null;
+          );
+        return button;
   };
 
   //Array where are the defaults values
@@ -87,6 +93,16 @@ _storageData(quotes){
 
   //Here you delete your own written quotes out of the array
   _deleteButton(){
+    //Add a delete API 
+    Alert.alert('Delete Quote','Do you want to delete this Quote?', [
+      {text: 'Break off', style: 'cancel'},
+      {text: 'Delete', 
+      style:'destructive', 
+      onPress: () => this._deleteQuote()}
+    ])
+  }
+//Add a delete function which get used when you click on the delete button
+  _deleteQuote(){
     let { index, quotes } = this.state;
     quotes.splice(index, 1); //delete the part of the array (1 = this one // 2 = this one and the next ...)
     //Safe the changed Quotes

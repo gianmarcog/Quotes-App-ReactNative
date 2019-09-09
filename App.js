@@ -1,4 +1,3 @@
-//Imports to using the function down below.
 import React, {Component} from 'react';
 import {Button, StyleSheet, Text, View, AsyncStorage} from 'react-native';
 import Quote from './js/components/Quote';
@@ -34,73 +33,77 @@ const data = [
           book: 'Harry Potter and the Sorcerers Stone'
       }
 ];
-//Start from 'App.js'
 export default class App extends Component {
-  //The state gives the start values. Their only change avaivle with setState
+  //The state gives the start values. Their can be changed with setState
   state = { index: 0, showNewQuoteScreen: false, quotes: data };
 
 //Formatting (async) the String back to a JSON
 _retrieveData = async () => {
-  //The new Quote is going to be local safed wiht the help from AsyncStorage
+  //The variable let value get all Storage from the Key 'Quotes'
   let value = await AsyncStorage.getItem('QUOTES');
     if(value != null){
       //Change the value from a String to an JSON
     value = JSON.parse(value);
-    //In the next step the new Quote get safed in the 'quotes' Array
+    //The Quotes get put into quotes which already have the default values
     this.setState({quotes: value});
   }
 }
 
-//The Data (new Quote) get stored in a String with the Key 'QUOTES'. This is where you get the data.
+//The Data (Quote) get store in a String with the Key 'QUOTES'. This is where you safe the data.
 _storageData(quotes){
   AsyncStorage.setItem('QUOTES', JSON.stringify(quotes)); // key - value
 }
 
-//Here your're adding another Quote
+//Here your're adding another Quote with the three parameters
   _addQuote = (text, author, book) => {
    
-    let { quotes } = this.state;
+    let { quotes } = this.state; //destructuringä
+    //Check if every Textfield isn't null
     if (text && author && book) {
       //push the new Quote to the array
     quotes.push({text: text, author: author, book: book});
     //The new Quote get safed
     this._storageData(quotes);
     }
-    //When you create a new Quote the first Screen/Quote you will see is the newest
+    //When you create a new Quote the next Screen/Quote is the newest
     this.setState({ 
       index: quotes.length-1, 
       showNewQuoteScreen: false, 
       quotes: quotes });
   }
 
-  //This Method is their to change the view with the quotes (whenever you will press to button)
+  //This Method change the view with the quotes (whenever you will press to button)
   _displayNextQuote(){
     let { index, quotes } = this.state;
     let nextIndex =index + 1;
-    if(nextIndex === quotes.length) nextIndex = 0;
+    if(nextIndex === quotes.length) nextIndex = 0; //rest if you at the end of the quotes
     this.setState({index: nextIndex})
   }
 
   //Here you delete your own written quotes out of the array
   _deleteButton(){
     let { index, quotes } = this.state;
-    quotes.splice(index, 1); //delete the part of the array
+    quotes.splice(index, 1); //delete the part of the array (1 = this one // 2 = this one and the next ...)
+    //Safe the changed Quotes
     this._storageData(quotes);
+    //Sthe index to 0 so we can rerun the Quotes from the beginning
     this.setState({index: 0, quotes})
   }
 
-  //This Method is from react. This Method is the first Method which get called when the UI get open
+  //This is a react Method. This Method is the first Method which get called when the UI get open.
+  //It calls the Data out of the storage so you  have the Quotes to beginn of the app 
   componentDidMount(){
     this._retrieveData();
   }
 
-  //Thus Method shows the UI
+  //This Method shows the UI
   render(){
     let { index, quotes } = this.state //With this kind of coding you dont have to add to any index und quotes 'this.state' - destructuring
-    const quote = quotes[index];
+    const quote = quotes[index]; //This const load the actual index from the Array to show up
     return (
       <View style={styles.container}>
         <StyledButton 
+        //Here you have to add the paramters of the method wie create above
         style={styles.deleteButton}
         title="Löschen"
         onPress={()=> this._deleteButton()} 

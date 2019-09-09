@@ -8,6 +8,7 @@ export default class NewQuote extends Component {
     render() {
         //With this kind of coding you dont have to add to any visible and onSave 'this.props'
         const { visible, onSave } = this.props;
+        //props help to give one informationen to another component
         const { content, author, book } = this.state;
         return(
             <Modal //With the Modal Tag you can create something which position is over everything else

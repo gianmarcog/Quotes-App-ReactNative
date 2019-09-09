@@ -5,15 +5,19 @@ import NewQuote from './js/components/NewQuote';
 
 //Parent function for the buttons. You can use this function for any Button inside this JS
 function StyledButton(props) {
-  return(
-    //props.style is kind of a placeholder as a definition for the future StyledButtons
+  let button = null;
+  if(props.visible) //If the button visible boolean is true you can see it.
+  button( 
+       //props.style is kind of a placeholder as a definition for the future StyledButtons
 <View style={props.style}>
         <Button //The Button is gonnna get is properties
         title ={props.title}
           onPress={props.onPress}
         />
         </View>
-  )};
+  );
+  else return null;
+  };
 
   //Array where are the defaults values
   //Possible to delete this dafaults values let content do have a default value
@@ -112,11 +116,13 @@ _storageData(quotes){
         style={styles.deleteButton}
         title="Delete"
         onPress={()=> this._deleteButton()} 
+        visible={quotes.length >= 1} //If is their atleast one quote inside the array it gets true and is visible
         />
         <StyledButton 
         style={styles.newButton}
         title="New"
         onPress={()=> this.setState({showNewQuoteScreen: true })} 
+        visible={true}
         />
         {/* With the NewQuote Tag you can communicate with the 'NewQuote.js' file */}
         <NewQuote 
@@ -129,6 +135,7 @@ _storageData(quotes){
         style={styles.nextButton}
         title="next Quote"
         onPress={()=> this._displayNextQuote()} 
+        visible={quotes.length >= 2} //only shows up when  their is more then 1 quote
         />
       </View>
     )

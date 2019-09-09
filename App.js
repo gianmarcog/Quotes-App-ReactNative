@@ -1,11 +1,6 @@
 import React, {Component} from 'react';
-import {Button, 
-  StyleSheet, 
-  Text, 
-  View, 
-  AsyncStorage, 
-  Alert} 
-  from 'react-native';
+import {Button, StyleSheet, Text, View, Alert} from 'react-native';
+import {SQLite} from 'expo-sqlite';
 import Quote from './js/components/Quote';
 import NewQuote from './js/components/NewQuote';
 
@@ -24,57 +19,32 @@ function StyledButton(props) {
           );
         return button;
   };
+//create a const to work with the SQLite database
+  const database = SQLite.openDatabase('quotes.db');
 
-  //Array where are the defaults values
-  //Possible to delete this dafaults values let content do have a default value
-const data = [
-    {
-        text: 'Happiness can be found, even in the darkest of times, if one only remembers to turn on the light.',
-        author: 'Albus Dumbledore,',
-        book: 'Harry Potter and the Prisoner of Azkaban'
-    },
-    {
-        text: 'What you fear most of all is-fear.',
-        author: 'Remus Lupin,',
-        book: 'Harry Potter and the Prisoner of Azkaban'
-    },
-{
-          text: 'I hope youre pleased with yourselves. We could all have been killed — or worse, expelled. Now if you dont mind, Im going to bed.',
-          author: 'Hermione Granger,',
-          book: 'Harry Potter and the Sorcerers Stone'
-      }
-];
 export default class App extends Component {
   //The state gives the start values. Their can be changed with setState
   state = { index: 0, showNewQuoteScreen: false, quotes: data };
 
 //Formatting (async) the String back to a JSON
-_retrieveData = async () => {
-  //The variable let value get all Storage from the Key 'Quotes'
-  let value = await AsyncStorage.getItem('QUOTES');
-    if(value != null){
-      //Change the value from a String to an JSON
-    value = JSON.parse(value);
-    //The Quotes get put into quotes which already have the default values
-    this.setState({quotes: value});
-  }
-}
+_retrieveData = async () => {};
+
+_saveQuoteDB(){};
+
+_removeQuoteToDB(){};
 
 //The Data (Quote) get store in a String with the Key 'QUOTES'. This is where you safe the data.
 _storageData(quotes){
-  AsyncStorage.setItem('QUOTES', JSON.stringify(quotes)); // key - value
 }
 
 //Here your're adding another Quote with the three parameters
   _addQuote = (text, author, book) => {
-   
+   // TODO: new Quote in SQL
     let { quotes } = this.state; //destructuringä
     //Check if every Textfield isn't null
     if (text && author && book) {
       //push the new Quote to the array
     quotes.push({text: text, author: author, book: book});
-    //The new Quote get safed
-    this._storageData(quotes);
     }
     //When you create a new Quote the next Screen/Quote is the newest
     this.setState({ 
@@ -103,10 +73,9 @@ _storageData(quotes){
   }
 //Add a delete function which get used when you click on the delete button
   _deleteQuote(){
+    // TODO: new Quote  deleted in SQL
     let { index, quotes } = this.state;
     quotes.splice(index, 1); //delete the part of the array (1 = this one // 2 = this one and the next ...)
-    //Safe the changed Quotes
-    this._storageData(quotes);
     //Sthe index to 0 so we can rerun the Quotes from the beginning
     this.setState({index: 0, quotes})
   }

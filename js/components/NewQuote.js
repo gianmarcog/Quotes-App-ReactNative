@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 import {Button, Modal, TextInput, StyleSheet, View } from 'react-native'
 
 export default class NewQuote extends Component {
+    //The state say which types the paramters do have - destructuring
     state = { content: null, author: null, book: null };
 
     render() {
+        //With this kind of coding you dont have to add to any visible and onSave 'this.props'
         const { visible, onSave } = this.props;
         const { content, author, book } = this.state;
         return(
-            <Modal
+            <Modal //With the Modal Tag you can create something which position is over everything else
             visible={visible} 
             onRequestClose={() => {
                 this.setState({ content: null, author: null, book: null})
@@ -17,7 +19,7 @@ export default class NewQuote extends Component {
             animationType='slide'
             >
             <View style={styles.container}>
-                <TextInput 
+                <TextInput  // This Tag is just a field where you can write something inside
                 style={[styles.input, {height: 150}]} 
                 multiline={true}
                 placeholder="Inhalt des Zitat" 
@@ -38,6 +40,7 @@ export default class NewQuote extends Component {
                 />
              <Button title="Speichern" 
              onPress={() => {
+                 //Whenever you safe a Quote all the TextInput parameters get null again. 
                  this.setState({ content: null, author: null, book: null})
                 onSave(content, author, book)}}
                 />

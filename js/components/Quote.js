@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+//This JS is a seperate Component which handled the Quotes you see on the screen
 export default class Quote extends Component {
     render() {
         const {text, author, book } = this.props; //destructuring

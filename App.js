@@ -24,14 +24,31 @@ function StyledButton(props) {
 
 export default class App extends Component {
   //The state gives the start values. Their can be changed with setState
-  state = { index: 0, showNewQuoteScreen: false, quotes: data };
+  state = { index: 0, showNewQuoteScreen: false, quotes: [] };
 
 //Formatting (async) the String back to a JSON
-_retrieveData = async () => {};
+_retrieveData(){
+  database.transaction(transaction =>
+    transaction.executeSql('SELECT * FROM quotes', [], (_, result) =>
+    this.setState({ quotes: result.rows._array})
+    )
+  );
+}
 
-_saveQuoteDB(){};
+_saveQuoteDB(text, author, book, quotes){
+  database.transaction(transaction => 
+    transaction.executeSql(
+      'INSERT INTO quotes (text, author, book) VALUES (?,?,?)', 
+      [text, author, book], 
+    (_, result) => quotes[quotes.length - 1].id = result.insertId
+  )
+  );
+}
 
-_removeQuoteToDB(){};
+_removeQuoteToDB(id){
+  database.transaction(transaction =>
+    transaction.executeSql('DELETE FROM quotes WHERE id = ?', [id]))
+};
 
 //The Data (Quote) get store in a String with the Key 'QUOTES'. This is where you safe the data.
 _storageData(quotes){
@@ -45,6 +62,7 @@ _storageData(quotes){
     if (text && author && book) {
       //push the new Quote to the array
     quotes.push({text: text, author: author, book: book});
+    this._saveQuoteDB(text, author, book, quotes);
     }
     //When you create a new Quote the next Screen/Quote is the newest
     this.setState({ 
@@ -75,6 +93,7 @@ _storageData(quotes){
   _deleteQuote(){
     // TODO: new Quote  deleted in SQL
     let { index, quotes } = this.state;
+    this._removeQuoteToDB(quotes[index].id)
     quotes.splice(index, 1); //delete the part of the array (1 = this one // 2 = this one and the next ...)
     //Sthe index to 0 so we can rerun the Quotes from the beginning
     this.setState({index: 0, quotes})
@@ -83,6 +102,11 @@ _storageData(quotes){
   //This is a react Method. This Method is the first Method which get called when the UI get open.
   //It calls the Data out of the storage so you  have the Quotes to beginn of the app 
   componentDidMount(){
+    database.transaction(transaction => 
+      transaction.executeSql(
+        'CREATE TABLE IF NOT EXISTS quotes (id INTEGER PRIMARY KEY NOT NULL, text TEXT, author TEXT, book TEXT);'
+      )
+    );
     this._retrieveData();
   }
 

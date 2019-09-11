@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, StyleSheet, Text, View, Alert} from 'react-native';
+import {Button, StyleSheet, Text, View, Alert, ActivityIndicator} from 'react-native';
 import {SQLite} from 'expo-sqlite';
 import Quote from './js/components/Quote';
 import NewQuote from './js/components/NewQuote';
@@ -24,7 +24,7 @@ function StyledButton(props) {
 
 export default class App extends Component {
   //The state gives the start values. Their can be changed with setState
-  state = { index: 0, showNewQuoteScreen: false, quotes: [] };
+  state = { index: 0, showNewQuoteScreen: false, quotes: [], isLoading: true };
 
 //Formatting (async) the String back to a JSON
 _retrieveData = async () => {
@@ -38,7 +38,7 @@ _retrieveData = async () => {
       book: quote.data().book
     });
   });
-  this.setState({ quotes });
+  this.setState({ quotes, isLoading: false });
 }
 
 _saveQuoteDB = async (text, author, book, quotes) => {
@@ -111,6 +111,13 @@ _storageData(quotes){
 
   //This Method shows the UI
   render(){
+    if(this.state.isLoading){
+      return (
+        <View style={styles.container}>
+       <ActivityIndicator size="large" color="black"/>
+       </View>
+      )
+    }
     let { index, quotes } = this.state //With this kind of coding you dont have to add to any index und quotes 'this.state' - destructuring
     const quote = quotes[index]; //This const load the actual index from the Array to show up
     let content = <Text style={{fontSize: 30}}>No Quote</Text> //Create deafult value if their is no data inside the array

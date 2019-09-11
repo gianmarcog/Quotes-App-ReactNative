@@ -3,6 +3,8 @@ import {Button, StyleSheet, Text, View, Alert} from 'react-native';
 import {SQLite} from 'expo-sqlite';
 import Quote from './js/components/Quote';
 import NewQuote from './js/components/NewQuote';
+import Firebase from './js/Firebase';
+import { firstFromTime } from 'uuid-js';
 
 //Parent function for the buttons. You can use this function for any Button inside this JS
 function StyledButton(props) {
@@ -19,35 +21,36 @@ function StyledButton(props) {
           );
         return button;
   };
-//create a const to work with the SQLite database
-  const database = SQLite.openDatabase('quotes.db');
 
 export default class App extends Component {
   //The state gives the start values. Their can be changed with setState
   state = { index: 0, showNewQuoteScreen: false, quotes: [] };
 
 //Formatting (async) the String back to a JSON
-_retrieveData(){
-  database.transaction(transaction =>
-    transaction.executeSql('SELECT * FROM quotes', [], (_, result) =>
-    this.setState({ quotes: result.rows._array})
-    )
-  );
+_retrieveData = async () => {
+  let quotes = [];
+  let query= await Firebase.db.collection('quotes').get();
+  query.forEach(quote => {
+    quotes.push({
+      id: quote.id,
+      text: quote.data().text,
+      author: quote.data().author,
+      book: quote.data().book
+    });
+  });
+  this.setState({ quotes });
 }
 
-_saveQuoteDB(text, author, book, quotes){
-  database.transaction(transaction => 
-    transaction.executeSql(
-      'INSERT INTO quotes (text, author, book) VALUES (?,?,?)', 
-      [text, author, book], 
-    (_, result) => quotes[quotes.length - 1].id = result.insertId
-  )
-  );
+_saveQuoteDB = async (text, author, book, quotes) => {
+  docRef = await Firebase.db.collection('quotes').add({text, author, book});
+  quotes[quotes.length -1].id = docRef.id;
 }
 
 _removeQuoteToDB(id){
-  database.transaction(transaction =>
-    transaction.executeSql('DELETE FROM quotes WHERE id = ?', [id]))
+  Firebase.db.collection
+  .collection('quotes')
+  .doc(id)
+  .delete();
 };
 
 //The Data (Quote) get store in a String with the Key 'QUOTES'. This is where you safe the data.
@@ -102,11 +105,7 @@ _storageData(quotes){
   //This is a react Method. This Method is the first Method which get called when the UI get open.
   //It calls the Data out of the storage so you  have the Quotes to beginn of the app 
   componentDidMount(){
-    database.transaction(transaction => 
-      transaction.executeSql(
-        'CREATE TABLE IF NOT EXISTS quotes (id INTEGER PRIMARY KEY NOT NULL, text TEXT, author TEXT, book TEXT);'
-      )
-    );
+    Firebase.init();
     this._retrieveData();
   }
 

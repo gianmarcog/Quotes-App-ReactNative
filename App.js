@@ -23,10 +23,10 @@ function StyledButton(props) {
   };
 
 export default class App extends Component {
-  //The state gives the start values. Their can be changed with setState
+  //The state gives the start values.
   state = { index: 0, showNewQuoteScreen: false, quotes: [], isLoading: true };
 
-//Formatting (async) the String back to a JSON
+//Push the Quotes to Firebase
 _retrieveData = async () => {
   let quotes = [];
   let query= await Firebase.db.collection('quotes').get();
@@ -41,11 +41,13 @@ _retrieveData = async () => {
   this.setState({ quotes, isLoading: false });
 }
 
+//Save the Quotes inside the database
 _saveQuoteDB = async (text, author, book, quotes) => {
   docRef = await Firebase.db.collection('quotes').add({text, author, book});
   quotes[quotes.length -1].id = docRef.id;
 }
 
+//Delete the quote 
 _removeQuoteToDB(id){
   Firebase.db.collection
   .collection('quotes')
@@ -53,13 +55,8 @@ _removeQuoteToDB(id){
   .delete();
 };
 
-//The Data (Quote) get store in a String with the Key 'QUOTES'. This is where you safe the data.
-_storageData(quotes){
-}
-
 //Here your're adding another Quote with the three parameters
   _addQuote = (text, author, book) => {
-   // TODO: new Quote in SQL
     let { quotes } = this.state; //destructuringä
     //Check if every Textfield isn't null
     if (text && author && book) {
@@ -111,6 +108,7 @@ _storageData(quotes){
 
   //This Method shows the UI
   render(){
+    //During the quotes are loading the if-statement runs the ActivityIndicator 
     if(this.state.isLoading){
       return (
         <View style={styles.container}>

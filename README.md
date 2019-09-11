@@ -38,7 +38,7 @@ yarn start -- --reset-cache
 d to 
 ## SQLite
 To use the SQLiteDB you nee install this inside your Terminal
-> Only worked with it until the commit on Sep 10, 2019 (Commit 27)
+> Only worked with it until the last commit on Sep 10, 2019 (Commit 27)
 
 ```shell
 expo install expo-sqlite

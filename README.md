@@ -38,10 +38,25 @@ yarn start -- --reset-cache
 d to 
 ## SQLite
 To use the SQLiteDB you nee install this inside your Terminal
+> Only worked with it until the commit on Sep 10, 2019 (Commit 27)
 
 ```shell
 expo install expo-sqlite
 ```
+
+## Firebase
+To use the Firebase you nee install this inside your Terminal
+```shell
+npm install --save react-native-firebase
+```
+1. Visit the Firebase console.
+2. Click the Add project 
+3. Enter your new project name and modify the project id and region if necessary
+4. Click Create Project when finished
+5. Your project will now be created - this can take a few seconds
+6. Once created click the Continue button
+> for the documentation and more information click this here [Firebase Documentation](https://rnfirebase.io)
+
 
 
 ## Change port
